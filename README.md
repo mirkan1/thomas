@@ -7,3 +7,9 @@ A regular spam bot for Discord
 	user_div_class = "nameTag-3p0yK- nameTag-m8r81H"
 		span_class = "usernameOnline-3jr_0Y username-1cB_5E"
 ```
+
+TO_DO:
+	reCpatha bypass
+	joining channal
+	picking member, sending message
+	repeat
