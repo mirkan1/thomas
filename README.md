@@ -9,7 +9,7 @@ A regular spam bot for Discord
 ```
 
 TO_DO:
-	reCpatha bypass
-	joining channal
-	picking member, sending message
+	reCpatha bypass,
+	joining channel,
+	picking member, sending message,
 	repeat
