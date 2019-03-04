@@ -6,14 +6,17 @@ from selenium.webdriver.common.keys import Keys
 from time import sleep
 from os import listdir
 import random
+import getsmscode
+from faker import Faker
 
 # firefox lokasyionunu ver
 
-class Thomas:
+class Thomas():
 	binary = FirefoxBinary('C://Program Files//Mozilla Firefox//firefox.exe')
 	profile = webdriver.FirefoxProfile('C://Users//MBG//AppData//Roaming//Mozilla//Firefox//Profiles//0ej4htv6.default')#random.randint(0, len(listdir(PROFILE_DIC))) -1])
-	browser = webdriver.Firefox(firefox_binary=binary, firefox_profile=profile)
-	actions = ActionChains(browser) #divsiz yazmak icin
+	driver = webdriver.Firefox(firefox_binary=binary)#, firefox_profile=profile)
+	actions = ActionChains(driver) #divsiz yazmak icin
+
 	def __init__(self):
 		self.PROFILE_DIC = 'C://Users//MBG//Desktop//hakan_isi//spam_bot2//new_profiles'
 		self.PROFILE_NUM = 0
@@ -25,9 +28,8 @@ class Thomas:
 		self.DISCORD_GROUPS = ['https://discordapp.com/invite/35vucQS']
 		self.MEMBER_LIB = []
 		self.ACCOUNT_DIR = ''
-
-
-	def prof_change(num):
+			
+	def prof_change(self, num):
 		# banned_list = open("file_info.log", "a")
 		# banned_list.write("\n" + str(num))
 		# banned_list.close()
@@ -44,96 +46,108 @@ class Thomas:
 			print("New account is {}".format(listdir(self.PROFILE_DIC)[num]))
 			self.ACCOUNT_DIR = '%s//%s//' % (self.PROFILE_DIC, listdir(self.PROFILE_DIC)[num])
 
-		browser.quit()
+		Thomas().driver.quit()
 		new_profile = webdriver.FirefoxProfile(self.ACCOUNT_DIR)
-		browser = webdriver.Firefox(firefox_binary=binary, firefox_profile=new_profile)
+		Thomas().driver = webdriver.Firefox(firefox_binary=Thomas().binary, firefox_profile=new_profile)
 		sleep(1800)
-		browser.get("https://web.telegram.org/#/im?p=@{}".format(Spammer.spam_txt[random.randint(0, len(Spammer.spam_txt)) -1]))
+		#Thomas().driver.get("https://web.telegram.org/#/im?p=@{}".format(Spammer.spam_txt[random.randint(0, len(Spammer.spam_txt)) -1]))
+		return
 
-	def access_discord():
-		browser.get('http://discord.com/login')
+	def access_discord(self, ):
+		Thomas().driver.get('http://discord.com/login')
 		sleep(15)
-		email_input = browser.find_element_by_xpath('//*[@id="app-mount"]/div[1]/div/div[2]/div/form/div/div[3]/div[1]/div/input')
+		email_input = Thomas().driver.find_element_by_xpath('//*[@id="app-mount"]/div[1]/div/div[2]/div/form/div/div[3]/div[1]/div/input')
 		email_input.send_keys(self.ACCOUNTS[self.ACCOUNT_COUNT][0])
-		password_input = browser.find_element_by_xpath('//*[@id="app-mount"]/div[1]/div/div[2]/div/form/div/div[3]/div[2]/div/input')
+		password_input = Thomas().driver.find_element_by_xpath('//*[@id="app-mount"]/div[1]/div/div[2]/div/form/div/div[3]/div[2]/div/input')
 		password_input.send_keys(self.ACCOUNTS[self.ACCOUNT_COUNT][1])
-		login_button = browser.find_element_by_xpath('//*[@id="app-mount"]/div[1]/div/div[2]/div/form/div/div[3]/button[2]/div')
+		login_button = Thomas().driver.find_element_by_xpath('//*[@id="app-mount"]/div[1]/div/div[2]/div/form/div/div[3]/button[2]/div')
 		login_button.click()
-		invitation_pass()
+		Thomas().invitation_pass()
 
-	def invitation_pass():
+	def invitation_pass(self, ):
 		sleep(15)
-		browser.get(self.DISCORD_GROUPS[self.DISCORD_GROUPS_COUNT])
+		Thomas().driver.get(self.DISCORD_GROUPS[self.DISCORD_GROUPS_COUNT])
 		try:
-			browser.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/section/div/button').click()
-			browser.find_element_by_xpath('/html/body/div/div[1]/div/div/div/section/div/button').click()
+			Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/section/div/button').click()
+			Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div/div/section/div/button').click()
 		except:
 			try:
-				browser.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
-				browser.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
+				Thomas().driver.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
+				Thomas().driver.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
 			except:
 				pass
 			pass
-		return group_members()
+		return Thomas().group_members()
 		#import pdb; pdb.set_trace()
-		#browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+		#Thomas().driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-	def create_account():
-		pass
+	def getnada(self, ):
+		Thomas().driver.get("https://getnada.com/")
+		sleep(2)
+		Thomas().driver.find_element_by_css_selector(".icon-plus").click()
+		sleep(2)
+		Thomas().driver.find_element_by_xpath("/html/body/div/div[1]/footer/a[2]").click()	
+		sleep(2)
+		address = Thomas().driver.find_element_by_css_selector(".address").text
+		print(address.split("@")[1])
+		# if address.split("@")[1] == "undefined":
+		# 	return Thomas().getnada()
+		return Thomas().create_account(address)
 
-	def bypass_reCaptcha():
-		pass
+	def create_account(self, adress):
+		Thomas().driver.get('http://discord.com/register')
+		sleep(5)
+		email_input = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[1]/div/input')
+		email_input.send_keys(adress)
+		username = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[2]/div/input')
+		username.send_keys(Faker().user_name())
+		password_input = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[3]/div/input')
+		password_input.send_keys("supremePump123456789")
+		login_button = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[4]/button')
+		login_button.click()
+		return#Thomas().invitation_pass()
 
-	def group_access():
-		pass
-
-	def look_for_error():
-		pass
-
-	def write_down():
-		pass
-
-	def member_search(members):
+	def member_search(self, members):
 		for member in members:
 			print(member.text, member.text not in self.MEMBER_LIB)
 			if member.text not in MEMBER_LIB:
 				print(member.text)
 				self.MEMBER_LIB.append(member.text)
 				member.click()
-				actions.send_keys("Do you know supremepumps? https://supremepumps.co")
-				actions.perform()
+				Thomas().actions.send_keys("Do you know supremepumps? https://supremepumps.co")
+				Thomas().actions.perform()
 				sleep(0.25)
-				actions.send_keys(Keys.ENTER)
-				actions.perform()
+				Thomas().actions.send_keys(Keys.ENTER)
+				Thomas().actions.perform()
 				sleep(random.randint(5, 25))
-				return invitation_pass()
+				return Thomas().invitation_pass()
 			else:
 				pass
 				#print(member.text, "in MEMBER_LIB")
 
-	def group_members():
+	def group_members(self, ):
 		sleep(15)
 		try:
-			browser.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
+			Thomas().driver.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
 		except:
 			pass
 		#import pdb; pdb.set_trace()
-		scroll_div = browser.find_element_by_xpath('/html/body/div/div[1]/div/div[1]/div/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div/div[1]')
+		scroll_div = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[1]/div/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div/div[1]')
 		for i in range(random.randint(5, 500)):
 			if i%100 == 0:
 				sleep(3)
 			scroll_div.send_keys(Keys.PAGE_UP)
 			
-		members = browser.find_elements_by_class_name('username-_4ZSMR')
+		members = Thomas().driver.find_elements_by_class_name('username-_4ZSMR')
 		for member in members:
 			if member.text not in MEMBER_LIB:
 				print(member.text)
 				self.MEMBER_LIB.append(member.text)
 				member.click()
 				sleep(1)
-				actions.perform()
+				Thomas().actions.perform()
 				sleep(random.randint(1, 30))
-				return invitation_pass()
+				return Thomas().invitation_pass()
 			else:
 				print(member.text, "in MEMBER_LIB")
 
@@ -142,32 +156,50 @@ class Thomas:
 		self.ACCOUNT_COUNT+=1
 		self.DISCORD_GROUPS_COUNT+=1
 
+	def event(self):
+		while True:
+			#Thomas().getnada()
+			try:
+				# HEP EXCEPT YIYIOR BAK AMK BAAKAKAKAK
+				Thomas().getnada()		
+				sleep(15)
+			except:
+				print("except")
+				mobile_verify_message = Thomas().driver.find_elements_by_class_name("body-3ROqbj")
+				for message in mobile_verify_message:
+					print(message.text)
+					if message.text == "VERIFY BY PHONE" or message.text == "We've detected something out of the ordinary going on. To continue using Discord, we will need you to verify your account.":
+						print("yes")
+						self.ACCOUNT_COUNT+=1
+						getsmscode.verify_by_phone(Thomas().driver)
+						return Thomas().invitation_pass()
+						# import pdb; pdb.set_trace()
+						# # verify button
+						# Thomas().driver.find_element_by_xpath("/html/body/div/div[1]/div/div[1]/div[2]/div[3]/div/div[1]/div[4]/div").click()
+						# Thomas().driver.find_element_by_xpath("/html/body/div/div[4]/div[2]/div[3]/div/div[4]/input").send_keys("123") #send phone numberfrom get_china_num
+						# Thomas().driver.find_element_by_xpath("/html/body/div/div[4]/div[2]/div[3]/div/div[4]/div").click()
+						# Thomas().actions.send_keys("86") #china
+						# Thomas().actions.perform()
+						# Thomas().prof_change(self.ACCOUNT_COUNT)
+					else:
+						print("no")
+						Thomas().prof_change(self.ACCOUNT_COUNT)
+
+Thomas().getnada()
 #import pdb;pdb.set_trace()
-while True:
-	browser.get("https://discordapp.com/channels/@me")			
-	sleep(15)
-	mobile_verify_message = browser.find_elements_by_class_name("body-3ROqbj")
-	for message in mobile_verify_message:
-		if message.text == "VERIFY BY PHONE":
-			print("yes")
-			self.ACCOUNT_COUNT+=1
-			prof_change(self.ACCOUNT_COUNT)
-		else:
-			print("no")
-			prof_change(self.ACCOUNT_COUNT)
 
 # try:
-# 	actions.send_keys("Do you know supremepumps? https://supremepumps.co")
-# 	actions.send_keys(Keys.ENTER)
+# 	Thomas().actions.send_keys("Do you know supremepumps? https://supremepumps.co")
+# 	Thomas().actions.send_keys(Keys.ENTER)
 # 	access_discord()
 # 	group_members()
 # except:
-# 	if browser.current_url == "https://discordapp.com/activity":
+# 	if Thomas().driver.current_url == "https://discordapp.com/activity":
 # 		mail = browse.get_element_by_xpath("/html/body/div/div[1]/div/div[1]/div[2]/div[3]/div/div[1]/div[4]/div[1]")
 # 		mail.click()
 # 		print(mail)
 # 		# Maile gidecek oradan maili onaylayacak, ya da telefondan yapacak bu is 
-	# mobile_verify_message = browser.get_elemets_by_class_name("body-3ROqbj")
+	# mobile_verify_message = Thomas().driver.get_elemets_by_class_name("body-3ROqbj")
 	# for message in mobile_verify_message:
 	# 	if message.text == "We've detected something out of the ordinary going on. To continue using Discord,":
 	# 		print("yes")
