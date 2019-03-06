@@ -13,19 +13,26 @@ from faker import Faker
 
 class Thomas():
 	binary = FirefoxBinary('C://Program Files//Mozilla Firefox//firefox.exe')
-	profile = webdriver.FirefoxProfile('C://Users//MBG//AppData//Roaming//Mozilla//Firefox//Profiles//0ej4htv6.default')#random.randint(0, len(listdir(PROFILE_DIC))) -1])
-	driver = webdriver.Firefox(firefox_binary=binary)#, firefox_profile=profile)
+	#windows_profile = webdriver.FirefoxProfile('C://Users//MBG//AppData//Roaming//Mozilla//Firefox//Profiles//0ej4htv6.default')#random.randint(0, len(listdir(PROFILE_DIC))) -1])
+	lubuntu_prof = webdriver.FirefoxProfile('//home//raq//Desktop//Others//hakan_is//new_profiles//1')#random.randint(0, len(listdir(PROFILE_DIC))) -1])
+	driver = webdriver.Firefox(firefox_profile=lubuntu_profile)#, firefox_binary=binary)
 	actions = ActionChains(driver) #divsiz yazmak icin
 
 	def __init__(self):
-		self.PROFILE_DIC = 'C://Users//MBG//Desktop//hakan_isi//spam_bot2//new_profiles'
+		#self.PROFILE_DIC = 'C://Users//MBG//Desktop//hakan_isi//spam_bot2//new_profiles'
+		self.PROFILE_DIC = '//home//raq//Desktop//Others//hakan_is//new_profiles//'
 		self.PROFILE_NUM = 0
 		self.ACCOUNT_COUNT = 0
 		self.DISCORD_GROUPS_COUNT = 0
 		self.ACCOUNTS = [
 			['tilaveryunus@gmail.com', 'mirkanbaba123'],
 		]
-		self.DISCORD_GROUPS = ['https://discordapp.com/invite/35vucQS']
+		self.DISCORD_GROUPS = [
+			'https://discordapp.com/invite/35vucQS',
+			'https://discordapp.com/invite/rcVXVab',
+			'https://discordapp.com/invite/TXqGhed',
+			'https://discordapp.com/invite/FMGAzwR',
+		]
 		self.MEMBER_LIB = []
 		self.ACCOUNT_DIR = ''
 			
@@ -77,10 +84,11 @@ class Thomas():
 			except:
 				pass
 			pass
-		return Thomas().group_members()
+		return Thomas().find_member_message()
 		#import pdb; pdb.set_trace()
 		#Thomas().driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
+	# put in another file
 	def getnada(self, ):
 		Thomas().driver.get("https://getnada.com/")
 		sleep(2)
@@ -94,11 +102,11 @@ class Thomas():
 		# 	return Thomas().getnada()
 		return Thomas().create_account(address)
 
-	def create_account(self, adress):
+	def create_account(self, address):
 		Thomas().driver.get('http://discord.com/register')
 		sleep(5)
 		email_input = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[1]/div/input')
-		email_input.send_keys(adress)
+		email_input.send_keys(address)
 		username = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[2]/div/input')
 		username.send_keys(Faker().user_name())
 		password_input = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[3]/div/input')
@@ -107,25 +115,29 @@ class Thomas():
 		login_button.click()
 		return#Thomas().invitation_pass()
 
-	def member_search(self, members):
-		for member in members:
-			print(member.text, member.text not in self.MEMBER_LIB)
-			if member.text not in MEMBER_LIB:
-				print(member.text)
-				self.MEMBER_LIB.append(member.text)
-				member.click()
-				Thomas().actions.send_keys("Do you know supremepumps? https://supremepumps.co")
-				Thomas().actions.perform()
-				sleep(0.25)
-				Thomas().actions.send_keys(Keys.ENTER)
-				Thomas().actions.perform()
-				sleep(random.randint(5, 25))
-				return Thomas().invitation_pass()
-			else:
-				pass
-				#print(member.text, "in MEMBER_LIB")
+	# def member_search(self, members):
+	# 	for member in members:
+	# 		print(member.text, member.text not in self.MEMBER_LIB)
+	# 		if member.text not in MEMBER_LIB:
+	# 			print(member.text)
+	# 			self.MEMBER_LIB.append(member.text)
+	# 			member.click()
+	# 			Thomas().actions.send_keys("Do you know supremepumps? https://supremepumps.co")
+	# 			Thomas().actions.perform()
+	# 			sleep(0.25)
+	# 			Thomas().actions.send_keys(Keys.ENTER)
+	# 			Thomas().actions.perform()
+	# 			sleep(random.randint(5, 25))
+	# 			return Thomas().invitation_pass()
+	# 		else:
+	# 			pass
+	# 			#print(member.text, "in MEMBER_LIB")
 
-	def group_members(self, ):
+	def find_member_message(self, ):
+		"""
+			finds chat div, scrolls up, picks member and check if it sdid not send him any message yet, sends message
+			Looks on chat area and sends people private messages
+		"""
 		sleep(15)
 		try:
 			Thomas().driver.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
@@ -133,7 +145,7 @@ class Thomas():
 			pass
 		#import pdb; pdb.set_trace()
 		scroll_div = Thomas().driver.find_element_by_xpath('/html/body/div/div[1]/div/div[1]/div/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div/div[1]')
-		for i in range(random.randint(5, 500)):
+		for i in range(500):
 			if i%100 == 0:
 				sleep(3)
 			scroll_div.send_keys(Keys.PAGE_UP)
@@ -149,6 +161,7 @@ class Thomas():
 				sleep(random.randint(1, 30))
 				return Thomas().invitation_pass()
 			else:
+				#delete else after test
 				print(member.text, "in MEMBER_LIB")
 
 		#change discord-group
@@ -160,9 +173,10 @@ class Thomas():
 		while True:
 			#Thomas().getnada()
 			try:
-				# HEP EXCEPT YIYIOR BAK AMK BAAKAKAKAK
-				Thomas().getnada()		
-				sleep(15)
+				# Her sey bittikten sonra bunu calistir
+				# bir hata oldugu zaman recaptha ya da ban mi diye baksin
+				# degilse hatayi versin
+				Thomas().getnada()
 			except:
 				print("except")
 				mobile_verify_message = Thomas().driver.find_elements_by_class_name("body-3ROqbj")
@@ -192,7 +206,7 @@ Thomas().getnada()
 # 	Thomas().actions.send_keys("Do you know supremepumps? https://supremepumps.co")
 # 	Thomas().actions.send_keys(Keys.ENTER)
 # 	access_discord()
-# 	group_members()
+# 	find_member_message()
 # except:
 # 	if Thomas().driver.current_url == "https://discordapp.com/activity":
 # 		mail = browse.get_element_by_xpath("/html/body/div/div[1]/div/div[1]/div[2]/div[3]/div/div[1]/div[4]/div[1]")
@@ -207,7 +221,7 @@ Thomas().getnada()
 	# 		return prof_change(ACCOUNT_COUNT)
 # 	try:
 # 		access_discord()
-# 		group_members()
+# 		find_member_message()
 # 	except:
 # 		import pdb; pdb.set_trace()
 # 	raise
