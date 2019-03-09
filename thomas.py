@@ -3,25 +3,26 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+import inspect, os, random
 from time import sleep
-from os import listdir
-import random
 import getsmscode
 from faker import Faker
 
 # firefox lokasyionunu ver
 
 binary = FirefoxBinary('C://Program Files//Mozilla Firefox//firefox.exe')
-windows_profile = webdriver.FirefoxProfile('C://Users//MBG//AppData//Roaming//Mozilla//Firefox//Profiles//0ej4htv6.default')#random.randint(0, len(listdir(PROFILE_DIC))) -1])
-#lubuntu_prof = webdriver.FirefoxProfile('//home//raq//Desktop//Others//hakan_is//new_profiles//1')#random.randint(0, len(listdir(PROFILE_DIC))) -1])
-driver = webdriver.Firefox(firefox_profile=webdriver.FirefoxProfile('C://Users//MBG//Desktop//hakan_isi//spam_bot2//banned_profiles//10'), firefox_binary=binary)
+#windows_profile = webdriver.FirefoxProfile('C://Users//MBG//AppData//Roaming//Mozilla//Firefox//Profiles//0ej4htv6.default')#random.randint(0, len(os.listdir(PROFILE_DIC))) -1])
+file_loc = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+lubuntu_prof = webdriver.FirefoxProfile(file_loc + "/profiles/banned_profiles/" + os.listdir(file_loc + "/profiles/banned_profiles")[0])
+driver = webdriver.Firefox(firefox_profile=lubuntu_prof)#, firefox_binary=binary)
 #actions = ActionChains(driver) #divsiz yazmak icin
 
 class Thomas():
+	# driveri buraya koy
 	def __init__(self, driver=driver):
 		self.DRIVER = driver
 		self.ACTION = ActionChains(self.DRIVER) #calisiyor mu emin ol
-		self.PROFILE_DIC = 'C://Users//MBG//Desktop//hakan_isi//spam_bot2//new_profiles'
+		self.PROFILE_DIC = file_loc  + "/profiles/banned_profiles"
 		#self.PROFILE_DIC = '//home//raq//Desktop//Others//hakan_is//new_profiles//'
 		self.PROFILE_NUM = 0
 		self.ACCOUNT_COUNT = 0
@@ -36,34 +37,41 @@ class Thomas():
 		]
 		self.MEMBER_LIB = []
 		self.ACCOUNT_DIR = ''
-			
+	
+	@property
+	def driver(self):
+		return self.DRIVER
+
+	@driver.setter
+	def DRIVER(self, value):
+		self.DRIVER = value
+
 	def prof_change(self, num):
-		# banned_list = open("file_info.log", "a")
-		# banned_list.write("\n" + str(num))
-		# banned_list.close()
 		try:
 			# banned_list = open("file_info.log", "r").read().split("\n")
 			# if str(num) in banned_list:
 			# 	return True
 
-			print("New account is {}".format(listdir(self.PROFILE_DIC)[num]))
-			self.ACCOUNT_DIR = '%s//%s' % (self.PROFILE_DIC, listdir(self.PROFILE_DIC)[num])
+			print("New account is {}".format(os.listdir(self.PROFILE_DIC)[num]))
+			self.ACCOUNT_DIR = '%s//%s' % (self.PROFILE_DIC, os.listdir(self.PROFILE_DIC)[num])
 		except IndexError:
 			PROFILE_NUM, num = 0, 0
-			print("New account is {}".format(listdir(self.PROFILE_DIC)[num]))
-			self.ACCOUNT_DIR = '%s//%s' % (self.PROFILE_DIC, listdir(self.PROFILE_DIC)[num])
-
+			print("New account is {}".format(os.listdir(self.PROFILE_DIC)[num]))
+			self.ACCOUNT_DIR = '%s//%s' % (self.PROFILE_DIC, os.listdir(self.PROFILE_DIC)[num])
+		print(self.DRIVER)
 		self.DRIVER.quit()
-		print(self.ACCOUNT_DIR)
+		#print(self.ACCOUNT_DIR)
 		new_profile = webdriver.FirefoxProfile(self.ACCOUNT_DIR)
-		self.DRIVER = webdriver.Firefox(firefox_binary=binary, firefox_profile=new_profile)
-		#self.DRIVER.get('http://www.facebook.com')
+		self.DRIVER = webdriver.Firefox(firefox_profile=new_profile)#firefox_binary=binary,
+		print(self.DRIVER)
+		self.DRIVER.get('http://www.facebook.com')
 		sleep(15)
-		#self.DRIVER.get("https://web.telegram.org/")
+		self.DRIVER.get("https://web.telegram.org/")
 		return Thomas().mk()
 		return Thomas().invitation_pass()
 
 	def mk(self):
+		print(self.DRIVER)
 		self.DRIVER.get('http://www.google.com')
 
 	def access_discord(self, ):
@@ -120,7 +128,7 @@ class Thomas():
 		elif len(self.DRIVER.find_elements('xpath', "//div[@class='g-recaptcha']")) != 0:
 			print("found reCaptha")
 			self.ACCOUNT_COUNT += 1
-			return Thomas().prof_change(self.ACCOUNT_COUNT)
+			return Thomas().prof_change(num=self.ACCOUNT_COUNT)
 			#change account
 			# profil degistir return Thomas().prof_change()
 
