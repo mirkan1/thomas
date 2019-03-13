@@ -140,10 +140,14 @@ class Thomas():
 		except:
 			# Profil zaten acik ya da internet yoktur demek
 			pass
+		input("createacount bekliyor")
 		Thomas().look_for_error()
 		return Thomas().invitation_pass()
 
 	def find_member_message(self, ):
+		ACTION = ActionChains(driver)
+		input("findmembermessage bekliyor")
+		import pdb; pdb.set_trace()
 		"""
 			finds chat div, scrolls up, picks member and check if it sdid not send him any message yet, sends message
 			Looks on chat area and sends people private messages
@@ -168,11 +172,11 @@ class Thomas():
 				print(member.text, Thomas.MEMBER_LIB)
 				Thomas.MEMBER_LIB.append(member.text)
 				member.click()
-				ACTIONACTION.send_keys("Do you know supremepumps? https://supremepumps.co")
-				ACTIONACTION.perform()
+				ACTION.send_keys("Do you know supremepumps? https://supremepumps.co")
+				ACTION.perform()
 				sleep(0.25)
-				ACTIONACTION.send_keys(Keys.ENTER)
-				ACTIONACTION.perform()
+				ACTION.send_keys(Keys.ENTER)
+				ACTION.perform()
 				sleep(random.randint(5, 25))
 				Thomas().look_for_error()
 				return Thomas().invitation_pass()
@@ -218,3 +222,5 @@ class Thomas():
 
 
 Thomas().getnada()
+
+# Thomas.driver.execute_script("""var element = document.querySelector(".membersWrap-2h-GB4");if (element)  element.parentNode.removeChild(element);""")
