@@ -7,6 +7,9 @@ import inspect, os, random
 from time import sleep
 import getsmscode
 from faker import Faker
+from mouseMove import mouseMove
+
+mouseMove()
 
 # firefox lokasyionunu ver
 
