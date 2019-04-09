@@ -3,18 +3,15 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-import inspect, os, random
+import inspect, os, random, getsmscode
 from time import sleep
-import getsmscode
 from faker import Faker
-from mouseMove import mouseMove
-
-mouseMove()
+from mouseMove import moveNscroll # kullan scroll down yerine
 
 # firefox lokasyionunu ver
 
 binary = FirefoxBinary('C://Program Files//Mozilla Firefox//firefox.exe')
-windows_profile = webdriver.FirefoxProfile('C://Users//MBG//AppData//Roaming//Mozilla//Firefox//Profiles//0ej4htv6.default')#random.randint(0, len(os.listdir(PROFILE_DIC))) -1])
+windows_profile = webdriver.FirefoxProfile('C://Users//Raq//AppData//Roaming//Mozilla//Firefox//Profiles//pw3c48y8.default') # Use your own file for, will make it autochoose
 file_loc = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 #lubuntu_prof = webdriver.FirefoxProfile(file_loc + "/profiles/banned_profiles/" + os.listdir(file_loc + "/profiles/banned_profiles")[0])
 
@@ -29,6 +26,8 @@ class Thomas():
 		['tilaveryunus@gmail.com', 'mirkanbaba123'],
 	]
 	DISCORD_GROUPS = [
+		'https://discordapp.com/channels/395316379353612288/402273167617556480', # megapump
+	#	'https://discordapp.com/channels/393088095840370689/481193721560432670',
 		'https://discordapp.com/invite/rcVXVab',
 		'https://discordapp.com/invite/TXqGhed',
 		'https://discordapp.com/invite/FMGAzwR',
@@ -99,6 +98,8 @@ class Thomas():
 		return Thomas().create_account(address)
 
 	def look_for_error(self,):
+		# TODO
+		# ADD MORE ERROR CODES
 		#recaptha_class = ['rc-anchor', 'rc-anchor-normal', 'rc-anchor-dark']
 		if len(Thomas.driver.find_elements('xpath', "//div[@class='body-3ROqbj']")) != 0:
 			print("found verify")
@@ -143,45 +144,47 @@ class Thomas():
 		except:
 			# Profil zaten acik ya da internet yoktur demek
 			pass
-		input("createacount bekliyor")
+		#input("createacount bekliyor")
 		Thomas().look_for_error()
 		return Thomas().invitation_pass()
 
 	def find_member_message(self, ):
-		ACTION = ActionChains(driver)
-		input("findmembermessage bekliyor")
-		import pdb; pdb.set_trace()
+		# TODO
+		# sometimes clicks somewhere it should not, make main window on top on that case (it might be fixed)
+		# Add random messages on random times, more randomness
+		# Change groups on random times
+
 		"""
 			finds chat div, scrolls up, picks member and check if it sdid not send him any message yet, sends message
 			Looks on chat area and sends people private messages
 		"""
-		ACTION = ActionChains(Thomas.driver)
-		sleep(15)
+		contentClass = "content-OzHfo4"
+		ACTION = ActionChains(Thomas().driver)
 		Thomas().look_for_error()
 		try:
 			Thomas.driver.find_element_by_xpath("/html/body/div/div[1]/div/div/div/section/div/button").click()
 		except:
 			pass
-		#import pdb; pdb.set_trace()
-		scroll_div = Thomas.driver.find_element_by_xpath('/html/body/div/div[1]/div/div[1]/div/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div/div[1]')
-		for i in range(500):
-			if i%100 == 0:
-				sleep(3)
-			scroll_div.send_keys(Keys.PAGE_UP)
-			
-		members = Thomas.driver.find_elements_by_class_name('username-_4ZSMR')
+
+		for j in range(random.randint(4,10)): moveNscroll(random.randint(-5000, -500)); sleep(random.randint(1,4+j))
+		members = Thomas.driver.find_elements_by_class_name(contentClass)
 		for member in members:
 			if member.text not in Thomas.MEMBER_LIB:
-				print(member.text, Thomas.MEMBER_LIB)
-				Thomas.MEMBER_LIB.append(member.text)
-				member.click()
-				ACTION.send_keys("Do you know supremepumps? https://supremepumps.co")
-				ACTION.perform()
-				sleep(0.25)
-				ACTION.send_keys(Keys.ENTER)
-				ACTION.perform()
-				sleep(random.randint(5, 25))
-				Thomas().look_for_error()
+				#print(member.text, Thomas.MEMBER_LIB)
+				#Thomas.MEMBER_LIB.append(member.text)
+				try:
+					member.click()
+					sleep(random.randint(3,7))
+					ACTION.send_keys(Faker().user_name())#"Do you know supremepumps? https://supremepumps.co " + str([random.choice(['a','b','c','d']) for i in range(6)]))
+					ACTION.send_keys(Keys.ENTER)
+					ACTION.perform()
+					ACTION.reset_actions()
+					sleep(random.randint(5, 25))
+					Thomas().look_for_error()
+					Thomas.driver.maximize_window()
+				except:
+					Thomas.driver.maximize_window()
+					pass
 				return Thomas().invitation_pass()
 			else:
 				#delete else after test
@@ -194,6 +197,8 @@ class Thomas():
 		return Thomas().invitation_pass()
 
 	def event(self):
+		# TODO
+		# I have no idea what is doing what here
 		while True:
 			#Thomas().getnada()
 			try:
@@ -223,7 +228,8 @@ class Thomas():
 						print("no")
 						Thomas().prof_change(Thomas.ACCOUNT_COUNT)
 
-
-Thomas().getnada()
+if __name__ == "__main__":
+	Thomas().getnada()
+#Thomas().driver.get("https://discordapp.com/channels/393088095840370689/481193721560432670")
 
 # Thomas.driver.execute_script("""var element = document.querySelector(".membersWrap-2h-GB4");if (element)  element.parentNode.removeChild(element);""")
