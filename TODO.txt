@@ -1,0 +1,6 @@
+TODO:
+    account olusturma
+    spam yapma
+    text dosyasini okuyacak ve icindeki discord sayfalarina spamlayacak
+    ubuntu ayri, windows ayri yaratilmis profil dosyalarini kaydedecek ve sonrasinda bunlarla spam yapmaya baslayacak (3 tane yeterli gunluk), eger 3den az profil varsa warning ver
+    

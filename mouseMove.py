@@ -11,5 +11,5 @@ def moveNscroll(val, x=None, y=None, duration=1):
         pyautogui.moveTo(x, y, duration)
     pyautogui.scroll(val)
 
-if __name__ == "__main__":
-    mouseMove()
+# if __name__ == "__main__":
+#     moveNscroll(100)

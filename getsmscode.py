@@ -17,7 +17,7 @@ info = {
 	'mobilelist': 'http://www.getsmscode.com/do.php?action=mobilelist&username=seleniumcrypt@gmail.com&token=8cdfe60f332b6496073d1a2c97a6ae70'
 	}
 
-def get_key(sms, driver):
+def get_key(sms):#, driver):
 	"""Waits for code to appear via API. If the code is not recieved restarts whole program"""
 	print(sms)
 	count = 0
@@ -30,36 +30,39 @@ def get_key(sms, driver):
 		# if reply != 'Message|not receive':
 		# elif reply == "Message|mobile number not found!":
 		if count > 15:
-			import pdb; pdb.set_trace()
+			#import pdb; pdb.set_trace()
 			# give driver here to driver
-			driver.quit()
+			#driver.quit()
 			print("%s is blacklisted" % (sms))
 			requests.get(info['addblack'] % (sms))
 			return get_key(str(requests.get(info['getmobile']).text))
 		count += 1
 		sleep(11)
-	import pdb; pdb.set_trace()
-	actions = ActionChains(driver) #divsiz yazmak icin
-	actions.send_keys(reply)
-	actions.perform()
-	#bozuk
 	return
-	return we_done(reply, driver)
 
-def verify_by_phone(driver):
-	actions = ActionChains(driver) #divsiz yazmak icin
-	driver.find_element_by_xpath("/html/body/div/div[1]/div/div[1]/div[2]/div[3]/div/div[1]/div[4]/div").click()
-	driver.find_element_by_xpath("/html/body/div/div[4]/div[2]/div[3]/div/div[4]/div").click()
-	actions.send_keys("china") #china
-	actions.perform()
-	driver.find_element_by_xpath("/html/body/div/div[4]/div[2]/div[3]/div/div[4]/div[2]/div[3]/div[1]/div[1]").click()
-	driver.find_element_by_xpath("/html/body/div/div[4]/div[2]/div[3]/div/div[4]/button").click()
-	sleep(1)
+def verify_by_phone():
+	"""Waits for code to appear via API. If the code is not recieved restarts whole program"""
 	sms = requests.get(info['getmobile']).text
-	driver.find_element_by_xpath("/html/body/div/div[4]/div[2]/div[3]/div/div[4]/input").send_keys(str(sms)[2:]) #send phone numberfrom get_china_num
-	return get_key(sms, driver)
-	#sleep(180)
-	#print("I hope you done, cuz im done")
+	print(sms)
+	count = 0
+	while True:
+		reply = requests.get(info['getsms'] % (sms)).text
+		print(count, reply)
+		if reply[-5:].isdigit():
+			reply = reply[-5:]
+			break
+		import pdb; pdb.set_trace()
+		# if reply != 'Message|not receive':
+		# elif reply == "Message|mobile number not found!":
+		if count > 15:
+			# give driver here to driver
+			#driver.quit()
+			print("%s is blacklisted" % (sms))
+			requests.get(info['addblack'] % (sms))
+			return get_key(str(requests.get(info['getmobile']).text))
+		count += 1
+		sleep(11)
+	return
 
 def replace_file():
 	"""If we_done is succeded this function creates new file on desired location and replace webappstore.sqlite from temp location to desired location"""
