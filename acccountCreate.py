@@ -85,14 +85,16 @@ class AccountCreator:
             # hic bir print olmamamsi lazim galiba
             sleep(10) # 5 dakika yap
             if answer != None:
-                return self.doc_replacer()
-                self.DRIVER.quit()
+                self.doc_replacer()
+                #self.DRIVER.quit()
                 return self.getNada()
             self.DRIVER.quit()
             self.DRIVER = webdriver.Firefox(firefox_binary=binary)
             return self.getNada()
-        Thread(target = check).start()
+        #Thread(target = check).start()
+
         answer = input("Click any button if you passed Recaptha")
+        check()
         #TODO
         #save your temp file to location of desired
         #works
@@ -107,36 +109,38 @@ class AccountCreator:
         temp = "C://Users//Raq//AppData//Local//Temp"
 
         for i in os.listdir(temp):
-            if i.startswith("tmp"):
-                if os.path.isdir(temp + "//" + i):
-                    for j in os.listdir(temp + "//" + i + "//webdriver-py-profilecopy//"):
-                        #import pdb;pdb.set_trace()
-                        if j.startswith("webappsstore"):
-                            # TODO
-                            # pick a good location for profiles
-                            os.mkdir(new_location + "//" + str(len(os.listdir(new_location)) + 1))
-                            self.DRIVER.quit()
-                            self.DRIVER = webdriver.Firefox(firefox_binary=binary)
-                            sleep(5)
-                            os.rename(temp + "//" + i + "//webdriver-py-profilecopy//" + j, new_location + "//" + str(len(os.listdir(new_location))) + "//" + j)
-                            os.rmdir(temp + "//" + i)
-                        else:
-                            pass
-            elif i.startswith("rust"):
-                if os.path.isdir(temp + "//" + i):
+            if i.startswith("tmp") or i.startswith("rust"):
+                try:
+                    if os.path.isdir(temp + "//" + i):
+                        for j in os.listdir(temp + "//" + i + "//webdriver-py-profilecopy//"):
+                            #import pdb;pdb.set_trace()
+                            if j.startswith("webappsstore"):
+                                # TODO
+                                # pick a good location for profiles
+                                os.mkdir(new_location + "//" + str(len(os.listdir(new_location)) + 1))
+                                self.DRIVER.close()
+                                sleep(5)
+                                os.rename(temp + "//" + i + "//webdriver-py-profilecopy//" + j, new_location + "//" + str(len(os.listdir(new_location))) + "//" + j)
+                                #os.rmdir(temp + "//" + i)
+                                self.DRIVER = webdriver.Firefox(firefox_binary=binary)
+                            else:
+                                pass
+                except:
                     for j in os.listdir(temp + "//" + i):
                         #import pdb;pdb.set_trace()
                         if j.startswith("webappsstore"):
                             # TODO
                             # pick a good location for profiles
                             os.mkdir(new_location + "//" + str(len(os.listdir(new_location)) + 1))
-                            self.DRIVER.quit()
+                            self.DRIVER.close()
                             self.DRIVER = webdriver.Firefox(firefox_binary=binary)
                             sleep(5)
                             os.rename(temp + "//" + i + "//" + j, new_location + "//" + str(len(os.listdir(new_location))) + "//" + j)
                             os.rmdir(temp + "//" + i)
                         else:
                             pass
+                        pass
+        return
 
     def look_for_error(self,):
         # TODO
