@@ -1,15 +1,15 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from time import sleep
 from re import search, match
 from selenium.webdriver.common.action_chains import ActionChains
-import random, requests, sys, os
+import random, requests, sys, os, inspect, msvcrt, time
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-import inspect, random
+from selenium.webdriver.common.keys import Keys
 from os import listdir
 from threading import Thread
 from faker import Faker
+from shutil import copyfile
 
 info = {
 	'login': 'http://www.getsmscode.com/do.php?action=login&username=seleniumcrypt@gmail.com&token=8cdfe60f332b6496073d1a2c97a6ae70',
@@ -47,11 +47,11 @@ class AccountCreator:
     def getNada(self, ):
         self.DRIVER.maximize_window()
         self.DRIVER.get("https://getnada.com/")
-        sleep(2)
+        time.sleep(2)
         self.DRIVER.find_element_by_css_selector(".icon-plus").click()
-        sleep(2)
+        time.sleep(2)
         self.DRIVER.find_element_by_xpath("/html/body/div/div[1]/footer/a[2]").click()	
-        sleep(2)
+        time.sleep(2)
         address = self.DRIVER.find_element_by_css_selector(".address").text
         if address.split("@")[1] == "undefined":
             return self.getNada()
@@ -61,7 +61,7 @@ class AccountCreator:
         #try:
         myUsername = Faker().user_name()
         self.DRIVER.get('http://discord.com/register')
-        sleep(5)
+        time.sleep(5)
         email_input = self.DRIVER.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[1]/div/input')
         email_input.send_keys(address)
         username = self.DRIVER.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[2]/div/input')
@@ -70,7 +70,7 @@ class AccountCreator:
         password_input.send_keys("supremePump123456789")
         login_button = self.DRIVER.find_element_by_xpath('/html/body/div/div[1]/div/div[2]/div/form/div/div[2]/div[4]/button')
         login_button.click()
-        sleep(5)
+        time.sleep(5)
         try:
             username = self.DRIVER.find_element_by_xpath('/html/body/div/div[1]/div/div/div/form/div/div[5]/div[1]/div/input')
             username.send_keys(myUsername)
@@ -79,68 +79,63 @@ class AccountCreator:
         except:
             pass
 
-        answer = None
-        def check():
-            # CALISIYOR MU SONRADAN CHECK ET
-            # hic bir print olmamamsi lazim galiba
-            sleep(10) # 5 dakika yap
-            if answer != None:
-                self.doc_replacer()
-                #self.DRIVER.quit()
-                return self.getNada()
-            self.DRIVER.quit()
-            self.DRIVER = webdriver.Firefox(firefox_binary=binary)
-            return self.getNada()
-        #Thread(target = check).start()
-
-        answer = input("Click any button if you passed Recaptha")
-        check()
+        def input_with_timeout(prompt, timeout, timer=time.monotonic):
+            sys.stdout.write(prompt)
+            sys.stdout.flush()
+            endtime = timer() + timeout
+            result = []
+            while timer() < endtime:
+                if msvcrt.kbhit():
+                    result.append(msvcrt.getwche()) #XXX can it block on multibyte characters?
+                    if len(result) >= 1:   #XXX check what Windows returns here
+                        return self.doc_replacer()
+                        #time.sleep(10)
+                        #return self.getNada()
+                time.sleep(0.04) # just to yield to other processes/threads
+            # self.DRIVER.quit()
+            # self.DRIVER = webdriver.Firefox(firefox_binary=binary)
+            # return self.getNada()    
+        input_with_timeout("Click any button if you passed Recaptha", 60*5)
         #TODO
         #save your temp file to location of desired
         #works
-        return
+        #return
         #self.look_for_error()
         #except:
         #    # Profil zaten acik ya da internet yoktur demek
         #    pass
 
     def doc_replacer(self, ):
-        new_location = "C://Users//Raq//Desktop//Others//thomas-the-discord-bot//profiles//new_profiles"#C://Users//Raq//Desktop//Others//hakan_picinin_isi//spam_bot2//new_profiles"
-        temp = "C://Users//Raq//AppData//Local//Temp"
+        new_location = ".//profiles//new_profiles" #XXX "." means current file location
+        temp = "C://Users//Raq//AppData//Local//Temp" #put your firefox profiles save location
 
         for i in os.listdir(temp):
-            if i.startswith("tmp") or i.startswith("rust"):
-                try:
-                    if os.path.isdir(temp + "//" + i):
-                        for j in os.listdir(temp + "//" + i + "//webdriver-py-profilecopy//"):
-                            #import pdb;pdb.set_trace()
-                            if j.startswith("webappsstore"):
-                                # TODO
-                                # pick a good location for profiles
-                                os.mkdir(new_location + "//" + str(len(os.listdir(new_location)) + 1))
-                                self.DRIVER.close()
-                                sleep(5)
-                                os.rename(temp + "//" + i + "//webdriver-py-profilecopy//" + j, new_location + "//" + str(len(os.listdir(new_location))) + "//" + j)
-                                #os.rmdir(temp + "//" + i)
-                                self.DRIVER = webdriver.Firefox(firefox_binary=binary)
-                            else:
-                                pass
-                except:
-                    for j in os.listdir(temp + "//" + i):
-                        #import pdb;pdb.set_trace()
-                        if j.startswith("webappsstore"):
-                            # TODO
-                            # pick a good location for profiles
-                            os.mkdir(new_location + "//" + str(len(os.listdir(new_location)) + 1))
-                            self.DRIVER.close()
-                            self.DRIVER = webdriver.Firefox(firefox_binary=binary)
-                            sleep(5)
-                            os.rename(temp + "//" + i + "//" + j, new_location + "//" + str(len(os.listdir(new_location))) + "//" + j)
-                            os.rmdir(temp + "//" + i)
-                        else:
-                            pass
-                        pass
-        return
+            if i.startswith("rust"):# or i.startswith("rust"):
+                # print("doc1")
+                # #try:
+                # if os.path.isdir(temp + "//" + i):
+                #     print("doc2")
+                #     for j in os.listdir(temp + "//" + i + "//webdriver-py-profilecopy//"):
+                #         if j.startswith("webappsstore"):
+                #             os.mkdir(new_location + "//" + str(len(os.listdir(new_location)) + 1))
+                #             time.sleep(5)
+                #             os.rename(temp + "//" + i + "//webdriver-py-profilecopy//" + j, new_location + "//" + str(len(os.listdir(new_location))) + "//" + j)
+                #             #TODO removedir after accomplished to copy file from its location to another
+                #             #os.rmdir(temp + "//" + i)
+                #             self.DRIVER = webdriver.Firefox(firefox_binary=binary)
+                #         else:
+                #             pass
+                #     break
+                for j in os.listdir(temp + "//" + i):
+                    if j.startswith("webappsstore"):
+                        os.mkdir(new_location + "//" + str(len(os.listdir(new_location)) + 1))
+                        time.sleep(5)
+                        copyfile(temp + "//" + i + "//" + j, new_location + "//" + str(len(os.listdir(new_location))) + "//" + j)
+                        self.DRIVER.quit()
+                        self.DRIVER = webdriver.Firefox(firefox_binary=binary)
+                        time.sleep(random.randint(1, 25)) #XXX it needs to sleep some time to not get time rated
+                        return self.getNada()
+        import pdb;pdb.set_trace()
 
     def look_for_error(self,):
         # TODO
@@ -153,7 +148,7 @@ class AccountCreator:
             # verify function
             answer = None
             def check():
-                sleep(10)
+                time.sleep(10)
                 if answer != None:
                     print(None)
                     pass
@@ -176,7 +171,7 @@ class AccountCreator:
             username.send_keys(myUsername)
             username_button = self.DRIVER.find_element_by_xpath('/html/body/div/div[1]/div/div/div/form/div/div[5]/div[2]/button')
             username_button.click()
-            sleep(5)
+            time.sleep(5)
             self.look_for_error()
             #change account
             # profil degistir return self.prof_change()
@@ -201,7 +196,7 @@ class AccountCreator:
                 requests.get(info['addblack'] % (sms))
                 return get_key(str(requests.get(info['getmobile']).text))
             count += 1
-            sleep(11)
+            time.sleep(11)
         return
 
     def verify_by_phone(self, ):
@@ -225,7 +220,7 @@ class AccountCreator:
                 requests.get(info['addblack'] % (sms))
                 return get_key(str(requests.get(info['getmobile']).text))
             count += 1
-            sleep(11)
+            time.sleep(11)
         return
 
     def replace_file(self, ):
@@ -242,12 +237,12 @@ class AccountCreator:
         sys.exit()
 """ 
     def look_for_error(self, DRIVER, sms, **kwargs):
-        sleep(10)
+        time.sleep(10)
         for error_might_be in DRIVER.find_elements_by_xpath("//h4[@class]"):
                 if error_might_be.get_attribute("class") == "md_simple_header":
                     # try:
                         DRIVER.find_element_by_xpath("//a[@class='error_modal_details_link']").click()
-                        sleep(2)
+                        time.sleep(2)
                         whole_message = DRIVER.find_element_by_css_selector(".error_modal_details").text#"/html/body/div[5]/div[2]/div/div/div[1]/div[2]/textarea").text   .error_modal_details
                         error_message = search('"error_message":"', whole_message)
                         wait_time = whole_message[error_message.end():].split("_")[-1].split('"')[0]
@@ -277,7 +272,7 @@ class AccountCreator:
                         # 	else:
                         # 		break
                         # 	# print("Waiting {} mins".format(round(int(wait_time) / 60)))
-                        # 	# sleep(int(wait_time) + 5)
+                        # 	# time.sleep(int(wait_time) + 5)
                         # except:
                         # 	break
                         else:
@@ -305,7 +300,7 @@ class AccountCreator:
     #            print(sms)
     #            if sms != 'Message|not receive':
     #                print("yap bakam bi, sonra duzeltirsin")
-    #            sleep(10)
+    #            time.sleep(10)
     #        except:
     #            print("banned")
     #            requests.get(info['addblack'] % (num)).text

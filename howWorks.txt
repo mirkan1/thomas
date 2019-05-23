@@ -1,0 +1,5 @@
+python3 accountCreate.py 
+    this will create an account and will wait untill you pass the Recaptha
+    After you passed recaptha it will copy the save file and locate it in order thomas to use it later
+python3 thomas.py 
+    For all the other works
